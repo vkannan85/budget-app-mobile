@@ -2,7 +2,7 @@ import React,{useEffect,useMemo,useState} from 'react';
 import {Image,ActivityIndicator,Alert,Modal,Pressable,SafeAreaView,ScrollView,StatusBar,StyleSheet,Text,TextInput,View,useWindowDimensions} from 'react-native';
 import {supabase} from './lib/supabase';
 
-const BANKS=['Lloyds Debit','Lloyds Credit','Monzo Debit','Monzo Credit'];
+const BANKS=['Lloyds Debit','Monzo Debit'];
 const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(Number(n||0));
 const pad=n=>String(n).padStart(2,'0');
 const monthKey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
