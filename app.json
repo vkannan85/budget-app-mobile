@@ -1,25 +1,29 @@
 {
   "expo": {
-    "name": "My Direct Debits",
+    "name": "My Personal Budgeting",
     "slug": "my-direct-debits",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "mydirectdebits",
     "userInterfaceStyle": "light",
+    "icon": "./app-icon.png",
     "web": {
       "bundler": "metro",
       "output": "single",
-      "name": "My Direct Debits",
-      "shortName": "Direct Debits",
+      "name": "My Personal Budgeting",
+      "shortName": "My Budget",
       "themeColor": "#006a4d",
-      "backgroundColor": "#f4f6f5"
+      "backgroundColor": "#f4f6f5",
+      "favicon": "./app-icon.png"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vkannan.mydirectdebits"
+      "bundleIdentifier": "com.vkannan.mydirectdebits",
+      "icon": "./app-icon.png"
     },
     "android": {
-      "package": "com.vkannan.mydirectdebits"
+      "package": "com.vkannan.mydirectdebits",
+      "icon": "./app-icon.png"
     }
   }
 }
