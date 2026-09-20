@@ -1,6 +1,8 @@
+node_modules/
+.expo/
+dist/
+web-build/
+.env
+.env.local
+npm-debug.log*
 .DS_Store
-.build/
-.swiftpm/xcode/
-DerivedData/
-xcuserdata/
-*.xcuserstate
