@@ -24,10 +24,7 @@ const Button=({children,onPress,secondary,danger,small,disabled})=><Pressable di
 export default function App(){
  const [session,setSession]=useState(null),[authLoading,setAuthLoading]=useState(true),[screen,setScreen]=useState('home'),[month,setMonth]=useState(new Date(new Date().getFullYear(),new Date().getMonth(),1)),[rows,setRows]=useState([]),[periods,setPeriods]=useState({}),[loading,setLoading]=useState(true),[query,setQuery]=useState(''),[bank,setBank]=useState('All'),[status,setStatus]=useState('All'),[edit,setEdit]=useState(null),[error,setError]=useState(''); const {width}=useWindowDimensions();
  async function load(){setLoading(true);setError('');const [dd,bp]=await Promise.all([supabase.from('direct_debits').select('id,data'),supabase.from('budget_periods').select('label_month,start_date,end_date')]);if(dd.error)setError(dd.error.message);else setRows((dd.data||[]).map(normalize));if(!bp.error){const map={};for(const p of bp.data||[])map[String(p.label_month).slice(0,7)]=p;setPeriods(map)}setLoading(false)}
- useEffect(()=>{let mounted=true;supabase.auth.getSession().then(({data})=>{if(mounted){setSession(data.session);setAuthLoading(false)}});const {data:sub}=supabase.auth.onAuthStateChange((_event,next)=>{setSession(next);setAuthLoading(false)});return()=>{mounted=false;sub.subscription.unsubscribe()}},[]);
- useEffect(()=>{if(session)load()},[session]);
- async function githubLogin(){setError('');const redirectTo='https://direct-debits-pwa-production.up.railway.app/';const {error:e}=await supabase.auth.signInWithOAuth({provider:'github',options:{redirectTo}});if(e)setError(e.message)}
- async function signOut(){await supabase.auth.signOut();setScreen('home')}
+ useEffect(()=>{load()},[]);
  const key=monthKey(month),period=periods[key],rangeStart=period?.start_date||key+'-01',rangeEnd=period?.end_date||isoDate(key,31),items=useMemo(()=>rows.filter(x=>x.date&&x.date>=rangeStart&&x.date<=rangeEnd),[rows,rangeStart,rangeEnd]);
  const shown=items.filter(x=>(bank==='All'||x.bank===bank)&&(status==='All'||x.status===status.toLowerCase())&&(!query||[x.payee,x.vendor,x.bank,...x.tags].join(' ').toLowerCase().includes(query.toLowerCase())));
  const total=items.reduce((a,x)=>a+x.amount,0),paid=items.filter(x=>x.status==='paid').reduce((a,x)=>a+x.amount,0),due=total-paid;
