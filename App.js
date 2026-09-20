@@ -29,10 +29,14 @@ export default function App(){
  const shown=items.filter(x=>(bank==='All'||x.bank===bank)&&(status==='All'||x.status===status.toLowerCase())&&(!query||[x.payee,x.vendor,x.bank,...x.tags].join(' ').toLowerCase().includes(query.toLowerCase())));
  const total=items.reduce((a,x)=>a+x.amount,0),paid=items.filter(x=>x.status==='paid').reduce((a,x)=>a+x.amount,0),due=total-paid;
  const prevKey=monthKey(shiftMonth(month,-1)),prevItems=rows.filter(x=>x.month===prevKey);
- const cmpKey=x=>(x.payee||x.vendor||'').trim().toLowerCase()+'|'+(x.bank||'');
- const currentMap=new Map(items.map(x=>[cmpKey(x),x])),prevMap=new Map(prevItems.map(x=>[cmpKey(x),x]));
- const missingThisMonth=prevItems.filter(x=>!currentMap.has(cmpKey(x))),newThisMonth=items.filter(x=>!prevMap.has(cmpKey(x)));
- const changedThisMonth=items.filter(x=>{const p=prevMap.get(cmpKey(x));return p&&Math.abs(Number(p.amount)-Number(x.amount))>0.009}).map(x=>({current:x,previous:prevMap.get(cmpKey(x))}));
+ const cmpKey=x=>(x.payee||x.vendor||'').trim().toLowerCase();
+ const historyInMonth=(x,k)=>{const h=x.raw?.history;const a=Array.isArray(h)?h:(()=>{try{return JSON.parse(h||'[]')}catch{return[]}})();return a.some(e=>String(e?.at||'').slice(0,7)===k)};
+ const legacyForMonth=(k)=>rows.filter(x=>!x.month&&historyInMonth(x,k));
+ const currentCompare=[...items,...legacyForMonth(key)],prevCompare=[...prevItems,...legacyForMonth(prevKey)];
+ const currentMap=new Map(currentCompare.map(x=>[cmpKey(x),x])),prevMap=new Map(prevCompare.map(x=>[cmpKey(x),x]));
+ const missingThisMonth=prevCompare.filter(x=>!currentMap.has(cmpKey(x))).filter((x,i,a)=>a.findIndex(y=>cmpKey(y)===cmpKey(x))===i);
+ const newThisMonth=currentCompare.filter(x=>!prevMap.has(cmpKey(x))).filter((x,i,a)=>a.findIndex(y=>cmpKey(y)===cmpKey(x))===i);
+ const changedThisMonth=items.filter(x=>{const p=prevMap.get(cmpKey(x));return p&&p.month&&Math.abs(Number(p.amount)-Number(x.amount))>0.009}).map(x=>({current:x,previous:prevMap.get(cmpKey(x))}));
  async function save(form){
    const id=form.rowId||globalThis.crypto?.randomUUID?.()||String(Date.now()), item={...form,rowId:id,id:form.id||id,month:key,dueDay:Number(form.dueDay),amount:Number(form.amount),tags:tagsOf(form.tags)};
    const record={id,data:payload(item,form.raw)}; const result=form.rowId?await supabase.from('direct_debits').update({data:record.data}).eq('id',form.rowId):await supabase.from('direct_debits').insert(record);
