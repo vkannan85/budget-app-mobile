@@ -1,1 +1,25 @@
-{"expo":{"name":"My Direct Debits","slug":"my-direct-debits","version":"1.0.0","orientation":"portrait","scheme":"mydirectdebits","userInterfaceStyle":"light","web":{"bundler":"metro","output":"static","name":"My Direct Debits","shortName":"Direct Debits","themeColor":"#006a4d","backgroundColor":"#f4f6f5"},"ios":{"supportsTablet":true,"bundleIdentifier":"com.vkannan.mydirectdebits"},"android":{"package":"com.vkannan.mydirectdebits"}}}
+{
+  "expo": {
+    "name": "My Direct Debits",
+    "slug": "my-direct-debits",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "mydirectdebits",
+    "userInterfaceStyle": "light",
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "name": "My Direct Debits",
+      "shortName": "Direct Debits",
+      "themeColor": "#006a4d",
+      "backgroundColor": "#f4f6f5"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vkannan.mydirectdebits"
+    },
+    "android": {
+      "package": "com.vkannan.mydirectdebits"
+    }
+  }
+}
