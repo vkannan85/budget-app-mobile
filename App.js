@@ -61,7 +61,7 @@ export default function App(){
  if(screen==='incomeExpenses'){
    const txItems=txRows.filter(x=>x.date&&x.date>=rangeStart&&x.date<=rangeEnd);
    const start=new Date(rangeStart+'T12:00:00'),weekOf=d=>{const days=Math.floor((new Date(d+'T12:00:00')-start)/86400000);return 'Week '+Math.min(4,Math.max(1,Math.floor(days/7)+1))};
-   const txShown=txItems.filter(x=>(!txDate||x.date===txDate)&&(txAccount==='All'||x.account===txAccount)&&(txType==='All'||x.type===txType)&&(txWeek==='All'||(txWeek==='Petrol'?x.category==='Petrol':(x.category===txWeek||(!x.category&&weekOf(x.date)===txWeek))));
+   const txShown=txItems.filter(x=>{const dateOk=!txDate||x.date===txDate;const accountOk=txAccount==='All'||x.account===txAccount;const typeOk=txType==='All'||x.type===txType;const weekOk=txWeek==='All'||(txWeek==='Petrol'?x.category==='Petrol':(x.category===txWeek||(!x.category&&weekOf(x.date)===txWeek)));return dateOk&&accountOk&&typeOk&&weekOk;});
    const income=txItems.filter(x=>x.type==='income').reduce((n,x)=>n+x.amount,0),expense=txItems.filter(x=>x.type!=='income').reduce((n,x)=>n+x.amount,0);
    const budget={ 'Week 1':250,'Week 2':200,'Week 3':200,'Week 4':150,'Petrol':125 };
    const saveTx=async form=>{const id=form.rowId||globalThis.crypto?.randomUUID?.()||String(Date.now()),data={...(form.raw||{}),id,date:form.date,type:form.type||'expense',amount:Number(form.amount),description:form.description,category:form.category||weekOf(form.date),paymentType:form.account,account:form.account,updatedAt:new Date().toISOString()};const q=form.rowId?supabase.from('transactions').update({data}).eq('id',form.rowId):supabase.from('transactions').insert({id,data});const {error:e}=await q;if(e)Alert.alert('Could not save',e.message);else{setTxEdit(null);load()}};
