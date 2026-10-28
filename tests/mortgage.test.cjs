@@ -1,0 +1,11 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {mortgagePeriods,mortgagePayload}=require('../lib/mortgage');
+const deals=[{id:'leeds',start_month:'2026-12-01'},{id:'skipton',start_month:'2023-01-01'},{id:'ireland',start_month:'2025-01-01'}];
+test('lender history is continuous and sorted with December included for Skipton',()=>{const rows=mortgagePeriods(deals,'2026-10');assert.deepEqual(rows.map(x=>[x.id,x.lender_end_month,x.status]),[['skipton','2024-12','Previous'],['ireland','2026-11','Current'],['leeds',null,'Upcoming']]);});
+test('current lender switches at the December 2026 boundary',()=>{const rows=mortgagePeriods(deals,'2026-12');assert.equal(rows.find(x=>x.status==='Current').id,'leeds');assert.equal(rows.find(x=>x.id==='ireland').status,'Previous');});
+test('Bank of Ireland starts in January 2025',()=>{const rows=mortgagePeriods(deals,'2025-01');assert.equal(rows.find(x=>x.status==='Current').id,'ireland');});
+const valid={start_month:'2025-01',rate_end_month:'2026-11',borrowing_amount:'254195',ltv:'',term_months:'360',annual_rate:'4.95',monthly_payment:'1356.82',deposit:'',reference_number:'Ref 1'};
+test('valid deal preserves figures and leaves missing LTV/deposit unknown',()=>{const {data,errors}=mortgagePayload(valid);assert.equal(errors.length,0);assert.equal(data.ltv,null);assert.equal(data.deposit,null);assert.equal(data.borrowing_amount,254195);assert.equal(data.annual_rate,4.95);assert.equal(data.start_month,'2025-01-01');assert.equal(data.monthly_payment,1356.82);});
+test('numeric ranges and finite values are checked',()=>{for(const patch of [{borrowing_amount:'-1'},{ltv:'101'},{annual_rate:'Infinity'},{monthly_payment:'abc'},{term_months:'12.5'}])assert.ok(mortgagePayload({...valid,...patch}).errors.length);});
+test('invalid months and reversed rate periods are rejected',()=>{for(const patch of [{start_month:'2025-13'},{rate_end_month:'2024-12'},{rate_end_month:''}])assert.ok(mortgagePayload({...valid,...patch}).errors.length);});
+test('zero interest is valid while borrowing and payments must be positive',()=>{assert.equal(mortgagePayload({...valid,annual_rate:'0'}).errors.length,0);assert.ok(mortgagePayload({...valid,monthly_payment:'0'}).errors.length);});
