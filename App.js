@@ -2,6 +2,8 @@ import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {Image,ActivityIndicator,Alert,Modal,Pressable,RefreshControl,SafeAreaView,ScrollView,StatusBar,StyleSheet,Switch,Text,TextInput,View,useWindowDimensions} from 'react-native';
 import {supabase} from './lib/supabase';
 import MortgageView from './MortgageView';
+import {initializeMortgageAccess} from './lib/mortgage-access';
+initializeMortgageAccess();
 
 const BANKS=['Lloyds Debit','Monzo Debit'];
 const TX_BANKS=['Lloyds Debit','Lloyds Credit','Monzo Debit','Monzo Credit'];
