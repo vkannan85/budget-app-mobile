@@ -49,7 +49,7 @@ const DEBIT_PROVIDER_LOGOS={
   "Direct Line": "https://www.directline.com/assets/images/logo.webp",
   "Home Tree": "https://www.hometree.co.uk/wp-content/themes/omitsis-hometree/assets/images/favicon.png",
   "D&G": "https://www.domesticandgeneral.com/favicon.ico",
-  "Meadfleet": "https://www.meadfleet.co.uk/wp-content/uploads/2023/01/meadfleet-favicon-300x300.jpg",
+  "Meadfleet": "https://www.meadfleet.co.uk/wp-content/uploads/2023/01/meadfleet-favicon-75x75.jpg",
   "Anthropic": "https://www.anthropic.com/images/icons/apple-touch-icon.png",
   "Lloyds": "https://www.lloydsbank.com/etc/designs/lloyds-v2/favicon.ico",
   "Specsavers": "https://www.specsavers.co.uk/sites/aui/26.09.4/bundles/pageparts/images/page-parts/1/XS_Specsavers_Logo_opt.svg",
@@ -59,7 +59,7 @@ const DEBIT_PROVIDER_LOGOS={
   "Virgin Media": "https://storyblok.cdn.vmo2digital.co.uk/f/253875/192x192/5d09d0d2df/virgin-media-fav.png/m/180x180",
   "Leeds Council": "https://www.leeds.gov.uk/themes/custom/leedscitycouncil_theme/assets/images/favicons/apple-touch-icon.png",
   "Monzo": "https://static-assets.monzo.com/monzo-com/02e8f41c109c6657fa9c5fb4712840f2c8f45047/_next/static/media/favicon.87a9df8c.png",
-  "O2": "https://www.o2.co.uk/icons/128x128/favicon.png",
+  "O2": "https://storyblok.cdn.vmo2digital.co.uk/f/253875/34x35/d12e2ecbea/o2-logo.svg",
   "Railway": "https://railway.com/apple-touch-icon.png",
   "Yorkshire Water": "https://www.yorkshirewater.com/img/content/logo.svg",
   "Bank of Ireland": "https://boi-public-assets.s3-eu-west-1.amazonaws.com/images/icons/apple-touch-icon-180x180.png",
@@ -69,7 +69,7 @@ const DEBIT_PROVIDER_LOGOS={
   "Guardian": "https://guardian1821.co.uk/wp-content/themes/guardian1821/dist/img/logo.svg",
   "Austhorpe School": "https://www.austhorpeprimary.org/images/austhorpe-logo.svg",
   "Rock Steady": "https://www.rocksteadymusicschool.com/wp-content/uploads/2024/09/cropped-rocksteady-favicon-180x180.png",
-  "United Carpets": "https://www.unitedcarpetsandbeds.com/static/version1792667533/frontend/UnitedCarpets/HyvaTheme/en_GB/images/uc-logo.svg",
+  "United Carpets": "https://www.unitedcarpetsandbeds.com/static/version1792667533/frontend/UnitedCarpets/HyvaTheme/en_GB/Monsoon_Pwa/images/favicons/apple-touch-icon.png",
   "Apple": "data:image/svg+xml,%3Csvg%20height%3D%2244%22%20viewBox%3D%220%200%2014%2044%22%20width%3D%2214%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22m13.0729%2017.6825a3.61%203.61%200%200%200%20-1.7248%203.0365%203.5132%203.5132%200%200%200%202.1379%203.2223%208.394%208.394%200%200%201%20-1.0948%202.2618c-.6816.9812-1.3943%201.9623-2.4787%201.9623s-1.3633-.63-2.613-.63c-1.2187%200-1.6525.6507-2.644.6507s-1.6834-.9089-2.4787-2.0243a9.7842%209.7842%200%200%201%20-1.6628-5.2776c0-3.0984%202.014-4.7405%203.9969-4.7405%201.0535%200%201.9314.6919%202.5924.6919.63%200%201.6112-.7333%202.8092-.7333a3.7579%203.7579%200%200%201%203.1604%201.5802zm-3.7284-2.8918a3.5615%203.5615%200%200%200%20.8469-2.22%201.5353%201.5353%200%200%200%20-.031-.32%203.5686%203.5686%200%200%200%20-2.3445%201.2084%203.4629%203.4629%200%200%200%20-.8779%202.1585%201.419%201.419%200%200%200%20.031.2892%201.19%201.19%200%200%200%20.2169.0207%203.0935%203.0935%200%200%200%202.1586-1.1368z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
 };
 function DebitProviderLogo({item}){
@@ -78,7 +78,7 @@ function DebitProviderLogo({item}){
  const [failed,setFailed]=useState(false);
  useEffect(()=>setFailed(false),[uri]);
  if(!uri||failed)return null;
- return <View style={s.debitProviderLogoWrap}><Image accessibilityLabel={provider+' official logo'} source={{uri}} resizeMode="contain" onError={()=>setFailed(true)} style={s.debitProviderLogo}/></View>;
+ return <View style={[s.debitProviderLogoWrap,provider==='O2'&&{backgroundColor:'#001e50'}]}><Image accessibilityLabel={provider+' official logo'} source={{uri}} resizeMode="contain" onError={()=>setFailed(true)} style={s.debitProviderLogo}/></View>;
 }
 
 export default function App(){
